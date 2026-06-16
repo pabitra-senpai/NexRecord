@@ -12,6 +12,14 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
+    <!-- Single Exit/Back Button on Top of Sidebar -->
+    <div class="sidebar-header">
+      <button class="back-to-app-btn" id="exitSettingsBtn" aria-label="Exit settings and return to recorder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span>Exit Settings</span>
+      </button>
+    </div>
+
     <div class="sidebar-brand">
       <svg class="brand-icon" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="10" fill="url(#og1)"/>
@@ -105,13 +113,7 @@
 
     <!-- ── APPEARANCE ── -->
     <section class="settings-section" id="section-appearance">
-      <div class="section-header">
-        <button class="back-to-general-btn" aria-label="Go back to general settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h1 class="section-title">Appearance</h1>
-      </div>
+      <h1 class="section-title">Appearance</h1>
 
       <div class="card">
         <p class="card-label">Theme</p>
@@ -154,13 +156,7 @@
 
     <!-- ── AUDIO ── -->
     <section class="settings-section" id="section-audio">
-      <div class="section-header">
-        <button class="back-to-general-btn" aria-label="Go back to general settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h1 class="section-title">Audio</h1>
-      </div>
+      <h1 class="section-title">Audio</h1>
 
       <div class="card">
         <p class="card-label">Quality Presets</p>
@@ -213,13 +209,7 @@
 
     <!-- ── SHORTCUTS ── -->
     <section class="settings-section" id="section-shortcuts">
-      <div class="section-header">
-        <button class="back-to-general-btn" aria-label="Go back to general settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h1 class="section-title">Keyboard Shortcuts</h1>
-      </div>
+      <h1 class="section-title">Keyboard Shortcuts</h1>
 
       <div class="card">
         <p class="card-desc-text">
@@ -251,13 +241,7 @@
 
     <!-- ── STORAGE ── -->
     <section class="settings-section" id="section-storage">
-      <div class="section-header">
-        <button class="back-to-general-btn" aria-label="Go back to general settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h1 class="section-title">Storage</h1>
-      </div>
+      <h1 class="section-title">Storage</h1>
 
       <div class="card">
         <div class="storage-meter-wrap">
@@ -288,20 +272,16 @@
 
     <!-- ── ABOUT ── -->
     <section class="settings-section" id="section-about">
-      <div class="section-header">
-        <button class="back-to-general-btn" aria-label="Go back to general settings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h1 class="section-title">About</h1>
-      </div>
+      <h1 class="section-title">About</h1>
 
       <div class="card about-card">
         <svg class="about-icon" viewBox="0 0 48 48" fill="none">
           <circle cx="24" cy="24" r="22" fill="url(#ag1)" opacity=".15"/>
           <circle cx="24" cy="24" r="10" fill="url(#ag1)" opacity=".3"/>
           <circle cx="24" cy="24" r="5" fill="url(#ag1)"/>
-          <defs><linearGradient id="ag1" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs>
+          <defs><linearGradient id="ag1" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#e040fb"/>
+            <stop offset="100%" stop-color="#7c4dff"/>
+          </linearGradient></defs>
         </svg>
         <h2 class="about-title">NexRecord</h2>
         <p class="about-version">Version 1.0.0</p>

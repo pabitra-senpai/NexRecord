@@ -29,7 +29,7 @@ const dom = {
   storageDetail:   document.getElementById('storageDetail'),
   totalRecCount:   document.getElementById('totalRecCount'),
   saveIndicator:   document.getElementById('saveIndicator'),
-  backBtns:        document.querySelectorAll('.back-to-general-btn'),
+  exitSettingsBtn: document.getElementById('exitSettingsBtn'),
   storageLimitLabel: document.getElementById('storageLimitLabel'),
 };
 
@@ -220,12 +220,12 @@ function bindEvents() {
     if (settings.theme === 'system') applyTheme('system');
   });
 
-  // Back buttons event - returns user to the main 'general' settings page
-  dom.backBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      switchSection('general');
+  // Dynamic Back/Exit Settings tab close event
+  if (dom.exitSettingsBtn) {
+    dom.exitSettingsBtn.addEventListener('click', () => {
+      window.close(); // Closes options page tab seamlessly
     });
-  });
+  }
 }
 
 // ─── Bootstrap ────────────────────────────────────────────────────────────────

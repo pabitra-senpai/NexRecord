@@ -92,6 +92,58 @@ a:hover { text-decoration: underline; }
   overflow-y: auto;
 }
 
+/* Back/Exit Button Container on Sidebar Top */
+.sidebar-header {
+  padding: 0 16px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 16px;
+}
+
+.back-to-app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(208, 112, 255, 0.08); /* Transparent primary glass look */
+  border: 1px solid rgba(208, 112, 255, 0.25); /* Border glow matching theme */
+  color: var(--primary);
+  padding: 8px 16px;
+  width: 100%;
+  border-radius: 30px; /* Modern Pill Shape */
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: inherit;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: all var(--transition);
+}
+
+.back-to-app-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--primary);
+  transition: transform var(--transition);
+}
+
+.back-to-app-btn:hover {
+  background: linear-gradient(135deg, var(--primary), var(--accent)); /* Solid accent gradient */
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(208, 112, 255, 0.45); /* Glowing shadow on hover */
+  transform: translateY(-1px);
+}
+
+.back-to-app-btn:hover svg {
+  stroke: #ffffff;
+  transform: translateX(-3px); /* Smooth arrow push on hover */
+}
+
+.back-to-app-btn:active {
+  transform: translateY(0) scale(0.97); /* Nice microclick feedback */
+}
+
 .sidebar-brand {
   display: flex;
   align-items: center;
@@ -160,66 +212,11 @@ a:hover { text-decoration: underline; }
 .section-title {
   font-size: 22px;
   font-weight: 700;
+  margin-bottom: 24px;
   background: linear-gradient(135deg, var(--text) 60%, var(--text-muted));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* ── Headers & Back Button (Modern Glass Pill Design) ───────────────────── */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 30px;
-}
-
-.section-header .section-title {
-  margin-bottom: 0;
-}
-
-.back-to-general-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: rgba(208, 112, 255, 0.08); /* Semi-transparent primary tint */
-  border: 1px solid rgba(208, 112, 255, 0.25); /* Colored glass border */
-  color: var(--primary);
-  padding: 8px 18px;
-  border-radius: 30px; /* Modern Pill Shape */
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: inherit;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  transition: all var(--transition);
-}
-
-.back-to-general-btn svg {
-  width: 15px;
-  height: 15px;
-  stroke: var(--primary);
-  transition: transform var(--transition);
-}
-
-.back-to-general-btn:hover {
-  background: linear-gradient(135deg, var(--primary), var(--accent)); /* Neon gradient flow */
-  border-color: transparent;
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(208, 112, 255, 0.45); /* Glowing shadow on hover */
-  transform: translateX(-3px); /* Smooth layout shift to the left */
-}
-
-.back-to-general-btn:hover svg {
-  stroke: #ffffff;
-  transform: translateX(-2px); /* Shift icon arrow inside on hover */
-}
-
-.back-to-general-btn:active {
-  transform: translateX(-1px) scale(0.97); /* Click feedback scale down */
 }
 
 /* ── Cards ───────────────────────────────────────────────────────────────── */
@@ -648,10 +645,31 @@ kbd {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 4px; }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* ── Responsive Mobile Layout Fixes ──────────────────────────────────────── */
 @media (max-width: 640px) {
   .page { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: static; flex-direction: row; padding: 12px 10px; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--glass-border); }
+  .sidebar { 
+    width: 100%; 
+    height: auto; 
+    position: static; 
+    flex-direction: row; 
+    padding: 12px 10px; 
+    overflow-x: auto; 
+    border-right: none; 
+    border-bottom: 1px solid var(--glass-border); 
+    align-items: center;
+  }
+  .sidebar-header {
+    padding: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+    margin-right: 12px;
+  }
+  .back-to-app-btn {
+    padding: 6px 12px;
+    width: auto;
+    border-radius: 20px;
+  }
   .sidebar-brand { display: none; }
   .sidebar-nav { flex-direction: row; padding: 0; gap: 4px; }
   .nav-link span:not(.sr-only) { display: none; }
