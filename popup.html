@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexRecord</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body class="theme-system" data-theme="dark">
+
+  <!-- ── App Shell ─────────────────────────────────────────── -->
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" fill="url(#brandGrad)"/>
+          <circle cx="12" cy="12" r="4" fill="#fff"/>
+          <circle cx="12" cy="12" r="2" fill="url(#brandGrad)"/>
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="24" y2="24">
+              <stop offset="0%" stop-color="#e040fb"/>
+              <stop offset="100%" stop-color="#7c4dff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">NexRecord</span>
+        <span class="brand-badge" id="recBadge" aria-live="polite"></span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path id="themeIcon"
+              d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="openOptions" aria-label="Settings" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav" role="tablist">
+      <button class="tab-btn active" data-tab="record" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6" fill="currentColor" stroke="none"/></svg>
+        Record
+      </button>
+      <button class="tab-btn" data-tab="library" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Library
+      </button>
+      <button class="tab-btn" data-tab="player" role="tab" aria-selected="false" id="playerTabBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21" fill="currentColor" stroke="none"/></svg>
+        Player
+      </button>
+    </nav>
+
+    <!-- ── RECORD TAB ───────────────────────────────────────── -->
+    <section class="tab-panel active" id="tab-record" role="tabpanel">
+
+      <!-- Record Card -->
+      <div class="record-card glass-card">
+        <!-- Waveform visualizer -->
+        <div class="visualizer-wrap">
+          <canvas id="visualizerCanvas" width="320" height="72" aria-hidden="true"></canvas>
+          <div class="visualizer-idle" id="vizIdle">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" fill="url(#vgr)" opacity=".15"/><circle cx="24" cy="24" r="12" fill="url(#vgr)" opacity=".25"/><circle cx="24" cy="24" r="5" fill="url(#vgr)"/><defs><linearGradient id="vgr" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs></svg>
+            <p>Ready to capture tab audio</p>
+          </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-display" id="timerDisplay" aria-live="polite">
+          <span id="timerText">00:00:00</span>
+          <span class="timer-label" id="timerLabel">READY</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="record-controls">
+          <button class="ctrl-btn secondary" id="btnPause" disabled aria-label="Pause recording" title="Pause (Ctrl+Shift+P)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="ctrl-btn primary record-btn" id="btnRecord" aria-label="Start recording" title="Start recording (Ctrl+Shift+R)">
+            <span class="rec-dot"></span>
+          </button>
+          <button class="ctrl-btn secondary" id="btnStop" disabled aria-label="Stop recording" title="Stop recording">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="1"/></svg>
+          </button>
+        </div>
+
+        <!-- Status message -->
+        <p class="status-msg" id="statusMsg">Press record to capture your tab's audio</p>
+
+        <!-- Quick settings row -->
+        <div class="quick-settings">
+          <div class="qs-item">
+            <label for="qsFormat">Format</label>
+            <select id="qsFormat" class="qs-select">
+              <option value="webm">WebM</option>
+              <option value="wav">WAV</option>
+            </select>
+          </div>
+          <div class="qs-item">
+            <label for="qsQuality">Quality</label>
+            <select id="qsQuality" class="qs-select">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Keyboard shortcut hint -->
+        <p class="shortcut-hint">
+          <kbd>Ctrl+Shift+R</kbd> Start/Stop &nbsp;·&nbsp; <kbd>Ctrl+Shift+P</kbd> Pause
+        </p>
+      </div>
+
+      <!-- Save dialog (appears after stop) -->
+      <div class="save-dialog glass-card hidden" id="saveDialog">
+        <h3 class="dialog-title">Save Recording</h3>
+        <div class="field-group">
+          <label for="filenameInput">File name</label>
+          <input type="text" id="filenameInput" class="text-input" placeholder="My Recording" maxlength="120" />
+        </div>
+        <div class="dialog-actions">
+          <button class="btn ghost" id="btnDiscard">Discard</button>
+          <button class="btn primary" id="btnSave">Save</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── LIBRARY TAB ──────────────────────────────────────── -->
+    <section class="tab-panel" id="tab-library" role="tabpanel">
+
+      <div class="library-toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search recordings…" aria-label="Search recordings"/>
+        </div>
+        <select id="sortSelect" class="qs-select sort-select" aria-label="Sort recordings">
+          <option value="date-desc">Newest</option>
+          <option value="date-asc">Oldest</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="duration-desc">Longest</option>
+          <option value="duration-asc">Shortest</option>
+        </select>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <svg viewBox="0 0 80 80" fill="none" class="empty-icon" aria-hidden="true">
+          <circle cx="40" cy="40" r="36" fill="url(#egr)" opacity=".1"/>
+          <circle cx="40" cy="40" r="6" fill="url(#egr)"/>
+          <path d="M28 40a12 12 0 0 1 24 0" stroke="url(#egr)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M20 40a20 20 0 0 1 40 0" stroke="url(#egr)" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".5"/>
+          <defs><linearGradient id="egr" x1="0" y1="0" x2="80" y2="80"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs>
+        </svg>
+        <p class="empty-title">No recordings yet</p>
+        <p class="empty-sub">Switch to Record and capture your first clip.</p>
+      </div>
+
+      <!-- Recordings list -->
+      <ul class="recordings-list" id="recordingsList" aria-label="Recordings"></ul>
+
+    </section>
+
+    <!-- ── PLAYER TAB ───────────────────────────────────────── -->
+    <section class="tab-panel" id="tab-player" role="tabpanel">
+
+      <div class="player-empty hidden" id="playerEmpty">
+        <svg viewBox="0 0 80 80" fill="none" class="empty-icon" aria-hidden="true">
+          <circle cx="40" cy="40" r="36" fill="url(#pgr)" opacity=".1"/>
+          <polygon points="30,25 60,40 30,55" fill="url(#pgr)"/>
+          <defs><linearGradient id="pgr" x1="0" y1="0" x2="80" y2="80"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs>
+        </svg>
+        <p class="empty-title">No track loaded</p>
+        <p class="empty-sub">Pick a recording from the Library.</p>
+      </div>
+
+      <div class="player-card glass-card" id="playerCard">
+        <!-- Track info -->
+        <div class="track-info">
+          <div class="track-art">
+            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" fill="url(#tgr)" opacity=".2"/><circle cx="20" cy="20" r="7" fill="url(#tgr)"/><defs><linearGradient id="tgr" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs></svg>
+          </div>
+          <div class="track-meta">
+            <p class="track-name" id="playerTrackName">—</p>
+            <p class="track-date" id="playerTrackDate">—</p>
+          </div>
+        </div>
+
+        <!-- Seek bar -->
+        <div class="seek-wrap">
+          <span class="time-label" id="playerCurrentTime">0:00</span>
+          <input type="range" class="seek-bar" id="seekBar" min="0" max="100" value="0" aria-label="Seek"/>
+          <span class="time-label" id="playerDuration">0:00</span>
+        </div>
+
+        <!-- Player controls -->
+        <div class="player-controls">
+          <button class="icon-btn sm" id="playerPrev" aria-label="Previous" title="Previous">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+          </button>
+          <button class="ctrl-btn primary sm" id="playerPlay" aria-label="Play" title="Play / Pause">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="icon-btn sm" id="playerNext" aria-label="Next" title="Next">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 8.5 6V6z"/><rect x="16" y="6" width="2" height="12"/></svg>
+          </button>
+        </div>
+
+        <!-- Speed & volume row -->
+        <div class="av-row">
+          <label class="av-label" for="speedSelect">Speed</label>
+          <select id="speedSelect" class="qs-select sm-select" aria-label="Playback speed">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+          <label class="av-label vol-label" for="volumeRange">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          </label>
+          <input type="range" id="volumeRange" class="volume-bar" min="0" max="100" value="100" aria-label="Volume"/>
+        </div>
+
+        <!-- Download from player -->
+        <button class="btn ghost full" id="playerDownload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+      </div>
+
+      <!-- Hidden audio element -->
+      <audio id="audioPlayer" preload="auto"></audio>
+    </section>
+
+  </div>
+
+  <!-- ── Rename Modal ─────────────────────────────────────── -->
+  <div class="modal-backdrop hidden" id="renameModal" role="dialog" aria-modal="true" aria-labelledby="renameTitle">
+    <div class="modal glass-card">
+      <h3 id="renameTitle" class="dialog-title">Rename Recording</h3>
+      <input type="text" id="renameInput" class="text-input" maxlength="120" aria-label="New name"/>
+      <div class="dialog-actions">
+        <button class="btn ghost" id="renameCancelBtn">Cancel</button>
+        <button class="btn primary" id="renameConfirmBtn">Rename</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ────────────────────────────────────────────── -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

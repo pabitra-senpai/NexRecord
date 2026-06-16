@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexRecord Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body data-theme="dark">
+
+<div class="page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" fill="url(#og1)"/>
+        <circle cx="12" cy="12" r="4" fill="#fff"/>
+        <circle cx="12" cy="12" r="2" fill="url(#og1)"/>
+        <defs>
+          <linearGradient id="og1" x1="0" y1="0" x2="24" y2="24">
+            <stop offset="0%" stop-color="#e040fb"/>
+            <stop offset="100%" stop-color="#7c4dff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-name">NexRecord</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#general"     class="nav-link active" data-section="general">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        General
+      </a>
+      <a href="#appearance" class="nav-link" data-section="appearance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M2 12h10"/></svg>
+        Appearance
+      </a>
+      <a href="#audio"       class="nav-link" data-section="audio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Audio
+      </a>
+      <a href="#shortcuts"   class="nav-link" data-section="shortcuts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+        Shortcuts
+      </a>
+      <a href="#storage"     class="nav-link" data-section="storage">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+        Storage
+      </a>
+      <a href="#about"       class="nav-link" data-section="about">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        About
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="content" id="mainContent">
+
+    <!-- ── GENERAL ── -->
+    <section class="settings-section active" id="section-general">
+      <h1 class="section-title">General</h1>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Default Export Format</span>
+            <span class="setting-desc">Audio format used when saving recordings</span>
+          </div>
+          <select class="styled-select" id="defaultFormat">
+            <option value="webm">WebM (Recommended)</option>
+            <option value="wav">WAV (Uncompressed)</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Default Audio Quality</span>
+            <span class="setting-desc">Bitrate used for new recordings</span>
+          </div>
+          <select class="styled-select" id="defaultQuality">
+            <option value="low">Low · 64 kbps</option>
+            <option value="medium" selected>Medium · 128 kbps</option>
+            <option value="high">High · 256 kbps</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Auto-generate File Name</span>
+            <span class="setting-desc">Pre-fill file name with date and time</span>
+          </div>
+          <label class="toggle" for="autoFilename">
+            <input type="checkbox" id="autoFilename" checked />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── APPEARANCE ── -->
+    <section class="settings-section" id="section-appearance">
+      <h1 class="section-title">Appearance</h1>
+
+      <div class="card">
+        <p class="card-label">Theme</p>
+        <div class="theme-grid">
+          <label class="theme-option" data-theme-val="dark">
+            <input type="radio" name="theme" value="dark" />
+            <span class="theme-preview dark-preview">
+              <span class="tp-header"></span>
+              <span class="tp-body"></span>
+            </span>
+            <span class="theme-name">Dark</span>
+          </label>
+          <label class="theme-option" data-theme-val="light">
+            <input type="radio" name="theme" value="light" />
+            <span class="theme-preview light-preview">
+              <span class="tp-header"></span>
+              <span class="tp-body"></span>
+            </span>
+            <span class="theme-name">Light</span>
+          </label>
+          <label class="theme-option" data-theme-val="amoled">
+            <input type="radio" name="theme" value="amoled" />
+            <span class="theme-preview amoled-preview">
+              <span class="tp-header"></span>
+              <span class="tp-body"></span>
+            </span>
+            <span class="theme-name">AMOLED</span>
+          </label>
+          <label class="theme-option" data-theme-val="system">
+            <input type="radio" name="theme" value="system" />
+            <span class="theme-preview system-preview">
+              <span class="tp-header"></span>
+              <span class="tp-body"></span>
+            </span>
+            <span class="theme-name">System</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AUDIO ── -->
+    <section class="settings-section" id="section-audio">
+      <h1 class="section-title">Audio</h1>
+
+      <div class="card">
+        <p class="card-label">Quality Presets</p>
+        <table class="quality-table">
+          <thead>
+            <tr>
+              <th>Preset</th>
+              <th>Bitrate</th>
+              <th>~Size/min</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="chip">Low</span></td>
+              <td>64 kbps</td>
+              <td>~0.5 MB</td>
+              <td>Voice, podcasts</td>
+            </tr>
+            <tr>
+              <td><span class="chip medium">Medium</span></td>
+              <td>128 kbps</td>
+              <td>~1 MB</td>
+              <td>General audio</td>
+            </tr>
+            <tr>
+              <td><span class="chip high">High</span></td>
+              <td>256 kbps</td>
+              <td>~2 MB</td>
+              <td>Music, high fidelity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <p class="card-label">Format Notes</p>
+        <div class="format-info">
+          <div class="fi-row">
+            <span class="fi-badge webm">WebM</span>
+            <span class="fi-text">Opus codec · Compressed · Small files · Widely supported in browsers</span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-badge wav">WAV</span>
+            <span class="fi-text">PCM codec · Uncompressed · Large files · Maximum compatibility</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SHORTCUTS ── -->
+    <section class="settings-section" id="section-shortcuts">
+      <h1 class="section-title">Keyboard Shortcuts</h1>
+
+      <div class="card">
+        <p class="card-desc-text">
+          Shortcuts can be customised at
+          <code>chrome://extensions/shortcuts</code>.
+        </p>
+
+        <div class="shortcut-list">
+          <div class="shortcut-row">
+            <span class="shortcut-desc">Start / Stop Recording</span>
+            <div class="shortcut-keys">
+              <kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>R</kbd>
+            </div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-desc">Pause / Resume Recording</span>
+            <div class="shortcut-keys">
+              <kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>P</kbd>
+            </div>
+          </div>
+        </div>
+
+        <a class="link-btn" href="chrome://extensions/shortcuts" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Manage shortcuts
+        </a>
+      </div>
+    </section>
+
+    <!-- ── STORAGE ── -->
+    <section class="settings-section" id="section-storage">
+      <h1 class="section-title">Storage</h1>
+
+      <div class="card">
+        <div class="storage-meter-wrap">
+          <div class="storage-labels">
+            <span>Storage used</span>
+            <span id="storageUsedText">Calculating…</span>
+          </div>
+          <div class="storage-bar-bg">
+            <div class="storage-bar-fill" id="storageBarFill" style="width:0%"></div>
+          </div>
+          <div class="storage-sub">
+            <span id="storageDetail">—</span>
+            <span>5 MB extension limit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Total Recordings</span>
+            <span class="setting-desc" id="totalRecCount">—</span>
+          </div>
+          <button class="btn danger-btn" id="clearAllBtn">Clear All</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="settings-section" id="section-about">
+      <h1 class="section-title">About</h1>
+
+      <div class="card about-card">
+        <svg class="about-icon" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" fill="url(#ag1)" opacity=".15"/>
+          <circle cx="24" cy="24" r="10" fill="url(#ag1)" opacity=".3"/>
+          <circle cx="24" cy="24" r="5" fill="url(#ag1)"/>
+          <defs><linearGradient id="ag1" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#e040fb"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs>
+        </svg>
+        <h2 class="about-title">NexRecord</h2>
+        <p class="about-version">Version 1.0.0</p>
+        <p class="about-desc">
+          A lightweight, privacy-first browser extension for capturing tab audio.
+          No external servers. No API keys. Completely offline.
+        </p>
+      </div>
+
+      <div class="card">
+        <p class="card-label">Technical details</p>
+        <div class="tech-list">
+          <div class="tech-row"><span class="tech-key">Manifest</span><span class="tech-val">V3</span></div>
+          <div class="tech-row"><span class="tech-key">API</span><span class="tech-val">chrome.tabCapture + MediaRecorder</span></div>
+          <div class="tech-row"><span class="tech-key">Storage</span><span class="tech-val">chrome.storage.local</span></div>
+          <div class="tech-row"><span class="tech-key">Codecs</span><span class="tech-val">Opus (WebM), PCM (WAV)</span></div>
+          <div class="tech-row"><span class="tech-key">Browsers</span><span class="tech-val">Chrome · Edge · Brave · Kiwi</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Save indicator -->
+<div class="save-indicator hidden" id="saveIndicator">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+  Settings saved
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>
