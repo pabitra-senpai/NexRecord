@@ -220,10 +220,10 @@ function bindEvents() {
     if (settings.theme === 'system') applyTheme('system');
   });
 
-  // Dynamic Back/Exit Settings tab close event
+  // Dynamic Back/Return to Home (popup.html) redirects seamlessly
   if (dom.exitSettingsBtn) {
     dom.exitSettingsBtn.addEventListener('click', () => {
-      window.close(); // Closes options page tab seamlessly
+      window.location.href = "popup.html"; // Redirects current tab to the main home page (popup.html)
     });
   }
 }
