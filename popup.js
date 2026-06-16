@@ -201,15 +201,19 @@ function switchTab(tabId) {
   dom.tabPanels.forEach((panel) => {
     panel.classList.toggle('active', panel.id === `tab-${tabId}`);
   });
+
+  if (tabId === 'library') {
+    renderLibrary();
+  }
 }
 
-// ─── Base64 Converters (Optimization for Chrome Storage) ──────────────────────
+// ─── Base64 Converters ──────────────────────
 
 function arrayBufferToBase64(buffer) {
   let binary = '';
   const bytes = new Uint8Array(buffer);
   const len = bytes.byteLength;
-  const chunkSize = 8192; // Chunking avoids call-stack overflow issues
+  const chunkSize = 8192;
   for (let i = 0; i < len; i += chunkSize) {
     const chunk = bytes.subarray(i, i + chunkSize);
     binary += String.fromCharCode.apply(null, chunk);
@@ -257,7 +261,6 @@ async function startRecording() {
       );
     });
 
-    // Notify background so it can track state & duration
     const bgRes = await chrome.runtime.sendMessage({
       type: MSG.START_RECORDING,
       tabId: null,
@@ -282,17 +285,14 @@ async function startRecording() {
       onRecordingStopped(blob);
     };
 
-    // Stop recording automatically if the tab closes or navigates away
     stream.getAudioTracks()[0].addEventListener('ended', () => {
       if (currentStatus !== 'idle') stopRecording();
     });
 
-    mediaRecorder.start(100); // collect every 100 ms
+    mediaRecorder.start(100);
 
-    // Set up visualizer & pass-through audio so it doesn't mute!
     setupVisualizer(stream);
 
-    // Update local state
     currentStatus  = 'recording';
     isPaused       = false;
     localStartTime = Date.now();
@@ -303,7 +303,6 @@ async function startRecording() {
     setStatus('recording', 'Recording tab audio…');
     dom.body.classList.add('is-recording');
 
-    // Badge
     dom.recBadge.textContent = 'REC';
     dom.recBadge.classList.add('visible');
 
@@ -367,7 +366,7 @@ async function stopRecording() {
   stopVisualizer();
 
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop(); // triggers onstop → onRecordingStopped
+    mediaRecorder.stop();
   }
 
   const res = await chrome.runtime.sendMessage({ type: MSG.STOP_RECORDING });
@@ -389,7 +388,6 @@ async function stopRecording() {
 function onRecordingStopped(blob) {
   pendingBlob = blob;
 
-  // Pre-fill filename
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   const timeStr = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
@@ -413,7 +411,6 @@ async function saveRecording() {
   setStatus('idle', 'Saving file...');
 
   try {
-    // Optimized Binary base64 conversion & save
     const buffer = await pendingBlob.arrayBuffer();
     const base64Data = arrayBufferToBase64(buffer);
 
@@ -431,10 +428,8 @@ async function saveRecording() {
       quality: dom.qsQuality.value,
     };
 
-    // Save audio data as optimized base64 string
     await chrome.storage.local.set({ [`${id}_data`]: base64Data });
 
-    // Save metadata
     recordings.unshift(meta);
     await saveRecordingsMeta();
 
@@ -472,13 +467,21 @@ async function saveRecordingsMeta() {
   await chrome.storage.local.set({ recordings_meta: recordings });
 }
 
+// Backward-compatible file reading (WAV/WebM and old JSON arrays)
 async function getRecordingBlob(id) {
   const data = await chrome.storage.local.get(`${id}_data`);
-  const base64Data = data[`${id}_data`];
-  if (!base64Data) return null;
+  const rawData = data[`${id}_data`];
+  if (!rawData) return null;
   
-  // Convert Base64 back to ArrayBuffer safely
-  const buffer = base64ToArrayBuffer(base64Data);
+  let buffer;
+  if (typeof rawData === 'string') {
+    buffer = base64ToArrayBuffer(rawData);
+  } else if (Array.isArray(rawData)) {
+    buffer = new Uint8Array(rawData).buffer;
+  } else {
+    return null;
+  }
+  
   return new Blob([buffer], { type: getMetaById(id)?.mimeType || 'audio/webm' });
 }
 
@@ -505,7 +508,7 @@ function getFilteredSorted() {
   let list = recordings.slice();
 
   if (searchQuery) {
-    const q = searchQuery.toLowerCase();
+    const q = searchQuery.toLowerCase().trim();
     list = list.filter((r) => r.name.toLowerCase().includes(q));
   }
 
@@ -529,8 +532,20 @@ function renderLibrary() {
   const list = getFilteredSorted();
   dom.recordingsList.innerHTML = '';
 
+  const emptyTitle = document.getElementById('emptyTitle');
+  const emptySub = document.getElementById('emptySub');
+
+  if (recordings.length === 0) {
+    dom.emptyState.classList.remove('hidden');
+    if (emptyTitle) emptyTitle.textContent = 'No recordings yet';
+    if (emptySub) emptySub.textContent = 'Switch to Record and capture your first clip.';
+    return;
+  }
+
   if (list.length === 0) {
     dom.emptyState.classList.remove('hidden');
+    if (emptyTitle) emptyTitle.textContent = 'No results found';
+    if (emptySub) emptySub.textContent = 'Try checking your spelling or search for something else.';
     return;
   }
 
@@ -707,7 +722,7 @@ function setupVisualizer(stream) {
     analyserNode.fftSize = 256;
 
     sourceNode.connect(analyserNode);
-    // Connect to context destination so the tab's audio isn't muted during recording!
+    // CRITICAL: Feed audio output to destination so tab remains unmuted
     sourceNode.connect(audioCtx.destination);
 
     dom.vizIdle.classList.add('hidden');
@@ -877,6 +892,7 @@ function formatTime(seconds) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+// Fixed sizing labels to show exact disk usages
 function formatBytes(bytes) {
   if (!bytes) return '0 B';
   const units = ['B', 'KB', 'MB', 'GB'];
@@ -1008,7 +1024,6 @@ function bindEvents() {
     if (currentRecId) downloadRecording(currentRecId);
   });
 
-  // Rename modal
   dom.renameCancelBtn.addEventListener('click', closeRenameModal);
   dom.renameConfirmBtn.addEventListener('click', confirmRename);
   dom.renameInput.addEventListener('keydown', (e) => {

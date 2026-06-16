@@ -17,18 +17,20 @@ let settings = {
 // ─── DOM ──────────────────────────────────────────────────────────────────────
 
 const dom = {
-  navLinks:       document.querySelectorAll('.nav-link'),
-  sections:       document.querySelectorAll('.settings-section'),
-  themeRadios:    document.querySelectorAll('input[name="theme"]'),
-  defaultFormat:  document.getElementById('defaultFormat'),
-  defaultQuality: document.getElementById('defaultQuality'),
-  autoFilename:   document.getElementById('autoFilename'),
-  clearAllBtn:    document.getElementById('clearAllBtn'),
+  navLinks:        document.querySelectorAll('.nav-link'),
+  sections:        document.querySelectorAll('.settings-section'),
+  themeRadios:     document.querySelectorAll('input[name="theme"]'),
+  defaultFormat:   document.getElementById('defaultFormat'),
+  defaultQuality:  document.getElementById('defaultQuality'),
+  autoFilename:    document.getElementById('autoFilename'),
+  clearAllBtn:     document.getElementById('clearAllBtn'),
   storageUsedText: document.getElementById('storageUsedText'),
   storageBarFill:  document.getElementById('storageBarFill'),
   storageDetail:   document.getElementById('storageDetail'),
   totalRecCount:   document.getElementById('totalRecCount'),
   saveIndicator:   document.getElementById('saveIndicator'),
+  backBtns:        document.querySelectorAll('.back-to-general-btn'),
+  storageLimitLabel: document.getElementById('storageLimitLabel'),
 };
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -56,15 +58,12 @@ async function persistSettings() {
 }
 
 function applySettingsToUI() {
-  // Apply theme to page
   applyTheme(settings.theme);
 
-  // Select correct radio
   dom.themeRadios.forEach((r) => {
     r.checked = r.value === settings.theme;
   });
 
-  // Selects
   dom.defaultFormat.value  = settings.format;
   dom.defaultQuality.value = settings.quality;
   dom.autoFilename.checked = settings.autoFilename;
@@ -94,7 +93,7 @@ function switchSection(sectionId) {
   if (sectionId === 'storage') updateStorageStats();
 }
 
-// ─── Storage stats ────────────────────────────────────────────────────────────
+// ─── Storage stats (Dynamic System Quota) ─────────────────────────────────────
 
 async function updateStorageStats() {
   const data = await chrome.storage.local.get(null);
@@ -103,17 +102,36 @@ async function updateStorageStats() {
   const meta = data.recordings_meta || [];
   dom.totalRecCount.textContent = `${meta.length} recording${meta.length !== 1 ? 's' : ''}`;
 
-  // Estimate storage usage
+  // Estimate storage usage in bytes
   const jsonStr = JSON.stringify(data);
   const bytes   = new TextEncoder().encode(jsonStr).byteLength;
-  const maxBytes = 5 * 1024 * 1024; // 5MB chrome.storage.local default
+  
+  // Default fallback limit of 500MB if estimate API fails
+  let maxBytes = 500 * 1024 * 1024;
+  let limitLabelText = "Unlimited Storage Active";
+
+  try {
+    // Dynamic Storage Estimate API to show genuine computer storage capacity
+    if (navigator.storage && navigator.storage.estimate) {
+      const estimate = await navigator.storage.estimate();
+      if (estimate.quota) {
+        maxBytes = estimate.quota;
+        limitLabelText = "Unlimited Storage (Device Managed)";
+      }
+    }
+  } catch (err) {
+    console.warn('Storage estimation error:', err);
+  }
 
   const usedMB  = bytes / (1024 * 1024);
   const usedPct = Math.min((bytes / maxBytes) * 100, 100);
 
   dom.storageUsedText.textContent = `${usedMB.toFixed(2)} MB`;
-  dom.storageBarFill.style.width  = `${usedPct.toFixed(1)}%`;
-  dom.storageDetail.textContent   = `${formatBytes(bytes)} of ${formatBytes(maxBytes)} used`;
+  dom.storageBarFill.style.width  = `${usedPct.toFixed(3)}%`;
+  dom.storageDetail.textContent   = `${formatBytes(bytes)} used of total storage quota`;
+  if (dom.storageLimitLabel) {
+    dom.storageLimitLabel.textContent = limitLabelText;
+  }
 }
 
 async function clearAllRecordings() {
@@ -200,6 +218,13 @@ function bindEvents() {
   // System theme change
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (settings.theme === 'system') applyTheme('system');
+  });
+
+  // Back buttons event - returns user to the main 'general' settings page
+  dom.backBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      switchSection('general');
+    });
   });
 }
 
