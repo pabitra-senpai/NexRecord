@@ -39,7 +39,7 @@ chrome.commands.onCommand.addListener((command) => {
       // Open popup — user must click record there
       chrome.action.openPopup?.().catch(() => {});
     } else {
-      // Send command to popup to stop the MediaRecorder gracefully
+      // Send message to popup to stop current recording gracefully
       chrome.runtime.sendMessage({ type: 'COMMAND_STOP' }).catch(() => {});
     }
   } else if (command === 'toggle-pause') {
